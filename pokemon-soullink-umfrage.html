@@ -1,0 +1,1129 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Pokémon Soullink Challenge – Umfrage</title>
+<link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --red: #E3350D;
+    --yellow: #FFD700;
+    --blue: #3B4CCA;
+    --dark: #1a1a2e;
+    --darker: #0f0f1a;
+    --card: #1e1e35;
+    --border: #2e2e50;
+    --text: #e8e8ff;
+    --muted: #8888aa;
+    --green: #2ecc71;
+    --accent: #FF6B35;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    background: var(--darker);
+    color: var(--text);
+    font-family: 'Nunito', sans-serif;
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image:
+      linear-gradient(rgba(59,76,202,0.05) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(59,76,202,0.05) 1px, transparent 1px);
+    background-size: 32px 32px;
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  .hero {
+    position: relative;
+    text-align: center;
+    padding: 48px 20px 32px;
+    z-index: 1;
+  }
+
+  .hero-badge {
+    display: inline-block;
+    background: var(--red);
+    color: white;
+    font-family: 'Press Start 2P', monospace;
+    font-size: 9px;
+    padding: 6px 14px;
+    border-radius: 4px;
+    letter-spacing: 1px;
+    margin-bottom: 20px;
+    box-shadow: 0 4px 0 #8B1A0A;
+    animation: bounce 2s ease-in-out infinite;
+  }
+
+  @keyframes bounce {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-4px); }
+  }
+
+  .hero h1 {
+    font-family: 'Press Start 2P', monospace;
+    font-size: clamp(16px, 4vw, 28px);
+    color: var(--yellow);
+    text-shadow: 3px 3px 0 var(--red), 6px 6px 0 rgba(0,0,0,0.4);
+    line-height: 1.5;
+    margin-bottom: 12px;
+  }
+
+  .hero h1 span { color: white; }
+
+  .hero-sub {
+    color: var(--muted);
+    font-size: 14px;
+    max-width: 500px;
+    margin: 0 auto 24px;
+    line-height: 1.6;
+  }
+
+  .pokeball-divider {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    justify-content: center;
+    margin-bottom: 8px;
+  }
+  .pokeball-divider::before, .pokeball-divider::after {
+    content: '';
+    width: 80px;
+    height: 2px;
+    background: linear-gradient(90deg, transparent, var(--blue));
+  }
+  .pokeball-divider::after { background: linear-gradient(90deg, var(--blue), transparent); }
+  .pokeball-icon { font-size: 20px; }
+
+  .rules-section {
+    max-width: 800px;
+    margin: 0 auto 40px;
+    padding: 0 20px;
+    position: relative;
+    z-index: 1;
+  }
+
+  .section-title {
+    font-family: 'Press Start 2P', monospace;
+    font-size: 10px;
+    color: var(--yellow);
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    margin-bottom: 16px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .section-title::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: var(--border);
+  }
+
+  .rules-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 12px;
+    margin-bottom: 20px;
+  }
+
+  .rule-card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 16px;
+    position: relative;
+    overflow: hidden;
+    transition: transform 0.2s, border-color 0.2s;
+  }
+  .rule-card:hover { transform: translateY(-2px); border-color: var(--blue); }
+  .rule-card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 3px;
+  }
+  .rule-card.red::before { background: var(--red); }
+  .rule-card.blue::before { background: var(--blue); }
+  .rule-card.yellow::before { background: var(--yellow); }
+  .rule-card.green::before { background: var(--green); }
+  .rule-card.orange::before { background: var(--accent); }
+
+  .rule-icon { font-size: 22px; margin-bottom: 8px; }
+  .rule-title { font-weight: 800; font-size: 13px; color: white; margin-bottom: 6px; }
+  .rule-desc { font-size: 12px; color: var(--muted); line-height: 1.6; }
+
+  .survey-wrap {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 0 20px 60px;
+    position: relative;
+    z-index: 1;
+  }
+
+  .form-card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    overflow: hidden;
+    margin-bottom: 16px;
+    transition: box-shadow 0.2s;
+  }
+  .form-card:hover { box-shadow: 0 0 0 1px var(--blue); }
+
+  .form-card-header {
+    background: rgba(59,76,202,0.15);
+    border-bottom: 1px solid var(--border);
+    padding: 14px 20px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .q-number {
+    background: var(--blue);
+    color: white;
+    font-family: 'Press Start 2P', monospace;
+    font-size: 8px;
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    box-shadow: 0 3px 0 rgba(0,0,0,0.3);
+  }
+  .q-number.red { background: var(--red); }
+  .q-number.yellow { background: #b8960c; }
+  .q-number.green { background: #1a8f4e; }
+
+  .q-title { font-weight: 800; font-size: 14px; color: white; line-height: 1.4; }
+  .form-card-body { padding: 18px 20px; }
+
+  label.check-option, label.radio-option {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    padding: 10px 14px;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background 0.15s;
+    margin-bottom: 6px;
+    border: 1px solid transparent;
+  }
+  label.check-option:hover, label.radio-option:hover {
+    background: rgba(59,76,202,0.12);
+    border-color: rgba(59,76,202,0.3);
+  }
+  label.check-option input, label.radio-option input { display: none; }
+
+  .custom-box {
+    width: 20px;
+    height: 20px;
+    border: 2px solid var(--border);
+    border-radius: 4px;
+    flex-shrink: 0;
+    margin-top: 1px;
+    position: relative;
+    transition: all 0.15s;
+    background: var(--darker);
+  }
+  .custom-radio { border-radius: 50%; }
+
+  label.check-option input:checked ~ .custom-box,
+  label.radio-option input:checked ~ .custom-box {
+    background: var(--blue);
+    border-color: var(--blue);
+  }
+  label.check-option input:checked ~ .custom-box::after,
+  label.radio-option input:checked ~ .custom-box::after {
+    content: '✓';
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-size: 12px;
+    font-weight: 900;
+  }
+  label.radio-option input:checked ~ .custom-box::after { content: '●'; font-size: 10px; }
+
+  .option-text { font-size: 13px; color: var(--text); line-height: 1.5; flex: 1; }
+  .option-text strong {
+    color: var(--yellow);
+    font-size: 11px;
+    font-family: 'Press Start 2P', monospace;
+    display: block;
+    margin-bottom: 2px;
+  }
+
+  input[type="text"], input[type="number"], textarea, select {
+    width: 100%;
+    background: var(--darker);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    color: var(--text);
+    font-family: 'Nunito', sans-serif;
+    font-size: 13px;
+    padding: 10px 14px;
+    outline: none;
+    transition: border-color 0.2s;
+  }
+  input[type="text"]:focus, input[type="number"]:focus, textarea:focus, select:focus {
+    border-color: var(--blue);
+    box-shadow: 0 0 0 3px rgba(59,76,202,0.2);
+  }
+  textarea { resize: vertical; min-height: 80px; }
+  select option { background: var(--darker); }
+
+  .field-label {
+    font-size: 12px;
+    color: var(--muted);
+    margin-bottom: 6px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+  }
+  .field-row { margin-bottom: 14px; }
+
+  .submit-area {
+    text-align: center;
+    padding: 24px 20px;
+    position: relative;
+    z-index: 1;
+  }
+
+  .submit-btn {
+    background: var(--red);
+    color: white;
+    border: none;
+    font-family: 'Press Start 2P', monospace;
+    font-size: 11px;
+    padding: 16px 40px;
+    border-radius: 8px;
+    cursor: pointer;
+    letter-spacing: 1px;
+    box-shadow: 0 6px 0 #8B1A0A, 0 8px 20px rgba(227,53,13,0.4);
+    transition: transform 0.1s, box-shadow 0.1s;
+  }
+  .submit-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 0 #8B1A0A, 0 12px 24px rgba(227,53,13,0.5);
+  }
+  .submit-btn:active { transform: translateY(4px); box-shadow: 0 2px 0 #8B1A0A; }
+  .submit-btn:disabled { opacity: 0.6; cursor: not-allowed; transform: none; }
+
+  /* Loading spinner */
+  .spinner {
+    display: inline-block;
+    width: 14px; height: 14px;
+    border: 2px solid rgba(255,255,255,0.3);
+    border-top-color: white;
+    border-radius: 50%;
+    animation: spin 0.7s linear infinite;
+    vertical-align: middle;
+    margin-right: 6px;
+  }
+  @keyframes spin { to { transform: rotate(360deg); } }
+
+  /* Result screen */
+  #result-screen {
+    display: none;
+    text-align: center;
+    padding: 60px 20px;
+    position: relative;
+    z-index: 1;
+  }
+  .result-icon { font-size: 64px; margin-bottom: 20px; animation: spinIn 1s ease; }
+  @keyframes spinIn {
+    0% { transform: rotate(0deg) scale(0); }
+    70% { transform: rotate(380deg) scale(1.1); }
+    100% { transform: rotate(360deg) scale(1); }
+  }
+  .result-title {
+    font-family: 'Press Start 2P', monospace;
+    font-size: 18px;
+    color: var(--yellow);
+    text-shadow: 2px 2px 0 var(--red);
+    margin-bottom: 12px;
+  }
+  .result-sub {
+    color: var(--muted);
+    font-size: 15px;
+    margin-bottom: 32px;
+    max-width: 400px;
+    margin-left: auto; margin-right: auto;
+    line-height: 1.6;
+  }
+  .result-summary {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 20px;
+    max-width: 500px;
+    margin: 0 auto 24px;
+    text-align: left;
+  }
+  .summary-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    padding: 8px 0;
+    border-bottom: 1px solid var(--border);
+    font-size: 13px;
+    gap: 12px;
+  }
+  .summary-row:last-child { border-bottom: none; }
+  .summary-key { color: var(--muted); flex-shrink: 0; }
+  .summary-val { color: white; font-weight: 700; text-align: right; }
+
+  .btn-row { display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; margin-top: 8px; }
+
+  .restart-btn, .results-btn {
+    font-family: 'Press Start 2P', monospace;
+    font-size: 9px;
+    padding: 12px 24px;
+    border-radius: 8px;
+    cursor: pointer;
+    letter-spacing: 1px;
+    transition: all 0.2s;
+  }
+  .restart-btn {
+    background: transparent;
+    border: 2px solid var(--blue);
+    color: var(--blue);
+  }
+  .restart-btn:hover { background: var(--blue); color: white; }
+  .results-btn {
+    background: var(--green);
+    border: 2px solid var(--green);
+    color: #0f1a0f;
+    box-shadow: 0 4px 0 #1a7a44;
+  }
+  .results-btn:hover { transform: translateY(-2px); box-shadow: 0 6px 0 #1a7a44; }
+
+  /* Results viewer */
+  #results-screen {
+    display: none;
+    max-width: 860px;
+    margin: 0 auto;
+    padding: 40px 20px 60px;
+    position: relative;
+    z-index: 1;
+  }
+  .results-header {
+    text-align: center;
+    margin-bottom: 32px;
+  }
+  .results-title {
+    font-family: 'Press Start 2P', monospace;
+    font-size: 14px;
+    color: var(--yellow);
+    text-shadow: 2px 2px 0 var(--red);
+    margin-bottom: 8px;
+  }
+  .results-count {
+    font-size: 13px;
+    color: var(--muted);
+  }
+  .results-count span {
+    color: var(--green);
+    font-weight: 800;
+    font-size: 16px;
+  }
+
+  .entry-card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    margin-bottom: 14px;
+    overflow: hidden;
+    transition: border-color 0.2s;
+  }
+  .entry-card:hover { border-color: var(--blue); }
+  .entry-header {
+    background: rgba(59,76,202,0.18);
+    border-bottom: 1px solid var(--border);
+    padding: 12px 18px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 12px;
+  }
+  .entry-trainer {
+    font-family: 'Press Start 2P', monospace;
+    font-size: 9px;
+    color: var(--yellow);
+  }
+  .entry-time {
+    font-size: 11px;
+    color: var(--muted);
+    white-space: nowrap;
+  }
+  .entry-body {
+    padding: 14px 18px;
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: 8px;
+  }
+  .entry-field { font-size: 12px; }
+  .entry-field-key { color: var(--muted); font-size: 11px; margin-bottom: 2px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.3px; }
+  .entry-field-val { color: var(--text); font-weight: 600; line-height: 1.4; }
+  .entry-field.wide { grid-column: 1 / -1; }
+
+  .back-btn {
+    background: transparent;
+    border: 2px solid var(--muted);
+    color: var(--muted);
+    font-family: 'Press Start 2P', monospace;
+    font-size: 8px;
+    padding: 10px 18px;
+    border-radius: 8px;
+    cursor: pointer;
+    letter-spacing: 1px;
+    transition: all 0.2s;
+    margin-bottom: 24px;
+    display: inline-block;
+  }
+  .back-btn:hover { border-color: var(--text); color: var(--text); }
+
+  .loading-msg {
+    text-align: center;
+    padding: 40px;
+    color: var(--muted);
+    font-size: 13px;
+  }
+  .error-msg {
+    background: rgba(227,53,13,0.12);
+    border: 1px solid var(--red);
+    border-radius: 10px;
+    padding: 16px 20px;
+    color: #ff8070;
+    font-size: 13px;
+    margin-bottom: 16px;
+    line-height: 1.6;
+  }
+
+  /* API setup banner */
+  .setup-banner {
+    background: rgba(255,215,0,0.08);
+    border: 1px solid rgba(255,215,0,0.3);
+    border-radius: 12px;
+    padding: 16px 20px;
+    margin-bottom: 20px;
+    font-size: 12px;
+    color: var(--yellow);
+    line-height: 1.7;
+  }
+  .setup-banner strong { display: block; margin-bottom: 4px; font-size: 13px; }
+  .setup-banner code {
+    background: rgba(0,0,0,0.4);
+    padding: 2px 6px;
+    border-radius: 4px;
+    font-size: 11px;
+    color: #aaddff;
+    font-family: monospace;
+  }
+
+  .progress-wrap {
+    max-width: 800px;
+    margin: 0 auto 24px;
+    padding: 0 20px;
+    position: relative;
+    z-index: 1;
+  }
+  .progress-bar {
+    height: 6px;
+    background: var(--border);
+    border-radius: 3px;
+    overflow: hidden;
+  }
+  .progress-fill {
+    height: 100%;
+    background: linear-gradient(90deg, var(--blue), var(--red));
+    border-radius: 3px;
+    transition: width 0.4s ease;
+    width: 0%;
+  }
+  .progress-label { font-size: 11px; color: var(--muted); text-align: right; margin-top: 4px; }
+</style>
+</head>
+<body>
+
+<!-- ═══════════════════════════════════════════════ MAIN FORM ═══ -->
+<div id="main-content">
+
+<div class="hero">
+  <div class="hero-badge">⚡ NUZLOCKE VARIANT</div>
+  <h1>POKÉMON<br><span>SOULLINK</span> CHALLENGE</h1>
+  <p class="hero-sub">Füll die Umfrage aus, damit wir die Regeln & den Start der Challenge perfekt koordinieren können!</p>
+  <div class="pokeball-divider"><span class="pokeball-icon">⬤</span></div>
+</div>
+
+<div class="rules-section">
+  <div class="section-title">📜 Grundregeln</div>
+  <div class="rules-grid">
+    <div class="rule-card red">
+      <div class="rule-icon">💀</div>
+      <div class="rule-title">Permadeath</div>
+      <div class="rule-desc">Ein Pokémon stirbt → es wird sofort in die Box gelegt und nie wieder genutzt.</div>
+    </div>
+    <div class="rule-card blue">
+      <div class="rule-icon">🔗</div>
+      <div class="rule-title">Soul Link</div>
+      <div class="rule-desc">Je zwei Spieler sind "gelinkt" – stirbt ein Pokémon bei einem, stirbt der Partner beim anderen ebenfalls.</div>
+    </div>
+    <div class="rule-card yellow">
+      <div class="rule-icon">📍</div>
+      <div class="rule-title">Erste Begegnung</div>
+      <div class="rule-desc">Pro Route/Area wird nur das erste angetroffene Pokémon gefangen. Kein zweiter Versuch.</div>
+    </div>
+    <div class="rule-card green">
+      <div class="rule-icon">🎲</div>
+      <div class="rule-title">Zufalls-Link</div>
+      <div class="rule-desc">Die Soul-Partner werden per Los oder nach Slot-Nummer zugewiesen – keine freie Wahl.</div>
+    </div>
+    <div class="rule-card orange">
+      <div class="rule-icon">🏆</div>
+      <div class="rule-title">Spielziel</div>
+      <div class="rule-desc">Die Pokémon-Liga besiegen, ohne dass alle verlinkten Paare gleichzeitig tot sind (Game Over).</div>
+    </div>
+  </div>
+</div>
+
+<div class="progress-wrap">
+  <div class="progress-bar"><div class="progress-fill" id="progress-fill"></div></div>
+  <div class="progress-label" id="progress-label">0 von 8 ausgefüllt</div>
+</div>
+
+<div class="survey-wrap">
+
+  <!-- Q1: Name -->
+  <div class="form-card" data-q="1">
+    <div class="form-card-header">
+      <div class="q-number">01</div>
+      <div class="q-title">Wie heißt du? (Trainer-Name)</div>
+    </div>
+    <div class="form-card-body">
+      <div class="field-row">
+        <div class="field-label">Dein Name / Nickname</div>
+        <input type="text" id="q1" placeholder="z.B. Ash, Red, Leaf..." oninput="updateProgress()">
+      </div>
+    </div>
+  </div>
+
+  <!-- Q2: Spiel -->
+  <div class="form-card" data-q="2">
+    <div class="form-card-header">
+      <div class="q-number red">02</div>
+      <div class="q-title">Welches Spiel möchtest du spielen?</div>
+    </div>
+    <div class="form-card-body">
+
+  <!-- GEN 1 -->
+  <label class="radio-option">
+    <input type="radio" name="q2" value="Pokémon Rot / Blau" onchange="updateProgress()">
+    <div class="custom-box custom-radio"></div>
+    <div class="option-text"><strong>GEN 1</strong>Pokémon Rot / Blau</div>
+  </label>
+
+  <label class="radio-option">
+    <input type="radio" name="q2" value="Pokémon Gelb" onchange="updateProgress()">
+    <div class="custom-box custom-radio"></div>
+    <div class="option-text"><strong>GEN 1</strong>Pokémon Gelb</div>
+  </label>
+
+  <!-- GEN 1 REMAKE -->
+  <label class="radio-option">
+    <input type="radio" name="q2" value="Pokémon Feuerrot / Blattgrün" onchange="updateProgress()">
+    <div class="custom-box custom-radio"></div>
+    <div class="option-text"><strong>GEN 1 REMAKE</strong>Pokémon Feuerrot / Blattgrün</div>
+  </label>
+
+  <!-- GEN 2 -->
+  <label class="radio-option">
+    <input type="radio" name="q2" value="Pokémon Gold / Silber" onchange="updateProgress()">
+    <div class="custom-box custom-radio"></div>
+    <div class="option-text"><strong>GEN 2</strong>Pokémon Gold / Silber</div>
+  </label>
+
+  <label class="radio-option">
+    <input type="radio" name="q2" value="Pokémon Kristall" onchange="updateProgress()">
+    <div class="custom-box custom-radio"></div>
+    <div class="option-text"><strong>GEN 2</strong>Pokémon Kristall</div>
+  </label>
+
+  <!-- GEN 2 REMAKE -->
+  <label class="radio-option">
+    <input type="radio" name="q2" value="Pokémon HeartGold / SoulSilver" onchange="updateProgress()">
+    <div class="custom-box custom-radio"></div>
+    <div class="option-text"><strong>GEN 2 REMAKE</strong>Pokémon HeartGold / SoulSilver</div>
+  </label>
+
+  <!-- GEN 3 -->
+  <label class="radio-option">
+    <input type="radio" name="q2" value="Pokémon Rubin / Saphir" onchange="updateProgress()">
+    <div class="custom-box custom-radio"></div>
+    <div class="option-text"><strong>GEN 3</strong>Pokémon Rubin / Saphir</div>
+  </label>
+
+  <label class="radio-option">
+    <input type="radio" name="q2" value="Pokémon Smaragd" onchange="updateProgress()">
+    <div class="custom-box custom-radio"></div>
+    <div class="option-text"><strong>GEN 3</strong>Pokémon Smaragd</div>
+  </label>
+
+  <!-- GEN 3 REMAKE -->
+  <label class="radio-option">
+    <input type="radio" name="q2" value="Pokémon Omega Rubin / Alpha Saphir" onchange="updateProgress()">
+    <div class="custom-box custom-radio"></div>
+    <div class="option-text"><strong>GEN 3 REMAKE</strong>Pokémon Omega Rubin / Alpha Saphir</div>
+  </label>
+
+  <!-- GEN 4 -->
+  <label class="radio-option">
+    <input type="radio" name="q2" value="Pokémon Diamant / Perl" onchange="updateProgress()">
+    <div class="custom-box custom-radio"></div>
+    <div class="option-text"><strong>GEN 4</strong>Pokémon Diamant / Perl</div>
+  </label>
+
+  <label class="radio-option">
+    <input type="radio" name="q2" value="Pokémon Platin" onchange="updateProgress()">
+    <div class="custom-box custom-radio"></div>
+    <div class="option-text"><strong>GEN 4</strong>Pokémon Platin</div>
+  </label>
+
+  <!-- GEN 4 REMAKE -->
+  <label class="radio-option">
+    <input type="radio" name="q2" value="Pokémon Strahlender Diamant / Leuchtende Perle" onchange="updateProgress()">
+    <div class="custom-box custom-radio"></div>
+    <div class="option-text"><strong>GEN 4 REMAKE</strong>Strahlender Diamant / Leuchtende Perle</div>
+  </label>
+
+  <!-- GEN 5 -->
+  <label class="radio-option">
+    <input type="radio" name="q2" value="Pokémon Schwarz / Weiß" onchange="updateProgress()">
+    <div class="custom-box custom-radio"></div>
+    <div class="option-text"><strong>GEN 5</strong>Pokémon Schwarz / Weiß</div>
+  </label>
+
+  <label class="radio-option">
+    <input type="radio" name="q2" value="Pokémon Schwarz 2 / Weiß 2" onchange="updateProgress()">
+    <div class="custom-box custom-radio"></div>
+    <div class="option-text"><strong>GEN 5</strong>Pokémon Schwarz 2 / Weiß 2</div>
+  </label>
+
+  <!-- GEN 6 -->
+  <label class="radio-option">
+    <input type="radio" name="q2" value="Pokémon X / Y" onchange="updateProgress()">
+    <div class="custom-box custom-radio"></div>
+    <div class="option-text"><strong>GEN 6</strong>Pokémon X / Y</div>
+  </label>
+
+  <!-- GEN 7 -->
+  <label class="radio-option">
+    <input type="radio" name="q2" value="Pokémon Sonne / Mond" onchange="updateProgress()">
+    <div class="custom-box custom-radio"></div>
+    <div class="option-text"><strong>GEN 7</strong>Pokémon Sonne / Mond</div>
+  </label>
+
+  <label class="radio-option">
+    <input type="radio" name="q2" value="Pokémon Ultrasonne / Ultramond" onchange="updateProgress()">
+    <div class="custom-box custom-radio"></div>
+    <div class="option-text"><strong>GEN 7</strong>Pokémon Ultrasonne / Ultramond</div>
+  </label>
+
+  <!-- GEN 8 -->
+  <label class="radio-option">
+    <input type="radio" name="q2" value="Pokémon Schwert / Schild" onchange="updateProgress()">
+    <div class="custom-box custom-radio"></div>
+    <div class="option-text"><strong>GEN 8</strong>Pokémon Schwert / Schild</div>
+  </label>
+
+  <!-- GEN 9 -->
+  <label class="radio-option">
+    <input type="radio" name="q2" value="Pokémon Karmesin / Purpur" onchange="updateProgress()">
+    <div class="custom-box custom-radio"></div>
+    <div class="option-text"><strong>GEN 9</strong>Pokémon Karmesin / Purpur</div>
+  </label>
+
+  <!-- ANDERES -->
+  <label class="radio-option">
+    <input type="radio" name="q2" value="Anderes" onchange="updateProgress(); toggleOther('q2-other', this)">
+    <div class="custom-box custom-radio"></div>
+    <div class="option-text">Anderes Spiel...</div>
+  </label>
+
+  <div id="q2-other" style="display:none; margin-top:8px;">
+    <input type="text" id="q2-other-text" placeholder="Welches Spiel?">
+  </div>
+
+</div>
+  </div>
+
+  <!-- Q3: Erfahrung -->
+  <div class="form-card" data-q="3">
+    <div class="form-card-header">
+      <div class="q-number">03</div>
+      <div class="q-title">Wie viel Erfahrung hast du mit Nuzlockes?</div>
+    </div>
+    <div class="form-card-body">
+      <label class="radio-option"><input type="radio" name="q3" value="Neuling – mein erster Nuzlocke" onchange="updateProgress()"><div class="custom-box custom-radio"></div><div class="option-text">🌱 Neuling – das ist mein erster Nuzlocke</div></label>
+      <label class="radio-option"><input type="radio" name="q3" value="Einige Nuzlockes gespielt" onchange="updateProgress()"><div class="custom-box custom-radio"></div><div class="option-text">🔥 Ich habe schon ein paar Nuzlockes gespielt</div></label>
+      <label class="radio-option"><input type="radio" name="q3" value="Erfahren" onchange="updateProgress()"><div class="custom-box custom-radio"></div><div class="option-text">⚔️ Erfahren – ich kenne die Mechaniken gut</div></label>
+      <label class="radio-option"><input type="radio" name="q3" value="Veteran" onchange="updateProgress()"><div class="custom-box custom-radio"></div><div class="option-text">🏆 Veteran – ich habe Soullinks schon gespielt</div></label>
+    </div>
+  </div>
+
+  <!-- Q4: Soul-Link Regeln -->
+  <div class="form-card" data-q="4">
+    <div class="form-card-header">
+      <div class="q-number red">04</div>
+      <div class="q-title">Welche Soullink-Regeln sollen aktiv sein?</div>
+    </div>
+    <div class="form-card-body">
+      <p style="font-size:12px;color:var(--muted);margin-bottom:12px;">Mehrfachauswahl möglich</p>
+      <label class="check-option"><input type="checkbox" name="q4" value="Permadeath" onchange="updateProgress()"><div class="custom-box"></div><div class="option-text">💀 Permadeath – tote Pokémon scheiden aus</div></label>
+      <label class="check-option"><input type="checkbox" name="q4" value="Soul-Tod" onchange="updateProgress()"><div class="custom-box"></div><div class="option-text">🔗 Soul-Tod – stirbt ein Partner, stirbt der gelinkte ebenfalls</div></label>
+      <label class="check-option"><input type="checkbox" name="q4" value="Erste Begegnung" onchange="updateProgress()"><div class="custom-box"></div><div class="option-text">📍 Erste Begegnung pro Route (Nuzlocke-Regel)</div></label>
+      <label class="check-option"><input type="checkbox" name="q4" value="Nicknamen" onchange="updateProgress()"><div class="custom-box"></div><div class="option-text">🏷️ Nicknamen-Pflicht für alle Pokémon</div></label>
+      <label class="check-option"><input type="checkbox" name="q4" value="Kein Grinding" onchange="updateProgress()"><div class="custom-box"></div><div class="option-text">⚡ Kein übermäßiges Grinding (Level-Cap)</div></label>
+      <label class="check-option"><input type="checkbox" name="q4" value="Items verboten" onchange="updateProgress()"><div class="custom-box"></div><div class="option-text">🚫 Items im Kampf verboten (außer Beeren)</div></label>
+      <label class="check-option"><input type="checkbox" name="q4" value="Doppelkampf" onchange="updateProgress()"><div class="custom-box"></div><div class="option-text">👥 Doppelkampf-Modus (Soul-Partner kämpfen zusammen)</div></label>
+      <label class="check-option"><input type="checkbox" name="q4" value="Shiny-Ausnahme" onchange="updateProgress()"><div class="custom-box"></div><div class="option-text">✨ Shiny-Ausnahme – Shinys dürfen immer gefangen werden</div></label>
+    </div>
+  </div>
+
+  <!-- Q5: Starter -->
+  <div class="form-card" data-q="5">
+    <div class="form-card-header">
+      <div class="q-number green">05</div>
+      <div class="q-title">Wie wird der Starter bestimmt?</div>
+    </div>
+    <div class="form-card-body">
+      <label class="radio-option"><input type="radio" name="q5" value="Freie Wahl" onchange="updateProgress()"><div class="custom-box custom-radio"></div><div class="option-text">✋ Freie Wahl – jeder nimmt was er will</div></label>
+      <label class="radio-option"><input type="radio" name="q5" value="Zufällig" onchange="updateProgress()"><div class="custom-box custom-radio"></div><div class="option-text">🎲 Zufällig ausgelost</div></label>
+      <label class="radio-option"><input type="radio" name="q5" value="Soul-Partner wählt" onchange="updateProgress()"><div class="custom-box custom-radio"></div><div class="option-text">🔗 Soul-Partner wählt für dich</div></label>
+      <label class="radio-option"><input type="radio" name="q5" value="Gleicher Typ" onchange="updateProgress()"><div class="custom-box custom-radio"></div><div class="option-text">🌀 Beide Seiten des Paares nehmen denselben Typ</div></label>
+    </div>
+  </div>
+
+  <!-- Q6: Wann starten -->
+  <div class="form-card" data-q="6">
+    <div class="form-card-header">
+      <div class="q-number">06</div>
+      <div class="q-title">Wann kannst du starten?</div>
+    </div>
+    <div class="form-card-body">
+      <div class="field-row">
+        <div class="field-label">Frühester möglicher Starttermin</div>
+        <input type="text" id="q6" placeholder="z.B. ab 20. Juni, Wochenende, abends..." oninput="updateProgress()">
+      </div>
+      <div class="field-row">
+        <div class="field-label">Bevorzugte Spielzeit</div>
+        <label class="check-option"><input type="checkbox" name="q6b" value="Morgens"><div class="custom-box"></div><div class="option-text">🌅 Morgens</div></label>
+        <label class="check-option"><input type="checkbox" name="q6b" value="Nachmittags"><div class="custom-box"></div><div class="option-text">☀️ Nachmittags</div></label>
+        <label class="check-option"><input type="checkbox" name="q6b" value="Abends"><div class="custom-box"></div><div class="option-text">🌙 Abends</div></label>
+        <label class="check-option"><input type="checkbox" name="q6b" value="Nachts"><div class="custom-box"></div><div class="option-text">🌌 Nachts</div></label>
+        <label class="check-option"><input type="checkbox" name="q6b" value="Wochenende"><div class="custom-box"></div><div class="option-text">🎮 Nur Wochenende</div></label>
+      </div>
+    </div>
+  </div>
+
+  <!-- Q7: Zusatzregeln -->
+  <div class="form-card" data-q="7">
+    <div class="form-card-header">
+      <div class="q-number yellow">07</div>
+      <div class="q-title">Welche Zusatzregeln wären interessant?</div>
+    </div>
+    <div class="form-card-body">
+      <p style="font-size:12px;color:var(--muted);margin-bottom:12px;">Optional – Mehrfachauswahl möglich</p>
+      <label class="check-option"><input type="checkbox" name="q7" value="Randomizer"><div class="custom-box"></div><div class="option-text">🎲 Randomizer (zufällige Pokémon-Begegnungen)</div></label>
+      <label class="check-option"><input type="checkbox" name="q7" value="Wedlocke"><div class="custom-box"></div><div class="option-text">💍 Wedlocke (Pokémon sind „verheiratet" und können nur mit dem Partner kämpfen)</div></label>
+      <label class="check-option"><input type="checkbox" name="q7" value="Dupecheck"><div class="custom-box"></div><div class="option-text">🚫 Dupecheck (kein Pokémon darf doppelt gefangen werden)</div></label>
+      <label class="check-option"><input type="checkbox" name="q7" value="Species Clause"><div class="custom-box"></div><div class="option-text">📋 Species Clause (kein Duplikat in der Truppe)</div></label>
+      <label class="check-option"><input type="checkbox" name="q7" value="Giftkampf verboten"><div class="custom-box"></div><div class="option-text">☠️ Giftkampf/Status-Regeln</div></label>
+      <label class="check-option"><input type="checkbox" name="q7" value="Keine"><div class="custom-box"></div><div class="option-text">✅ Keine Zusatzregeln – halten's einfach</div></label>
+    </div>
+  </div>
+
+  <!-- Q8: Kommentar -->
+  <div class="form-card" data-q="8">
+    <div class="form-card-header">
+      <div class="q-number green">08</div>
+      <div class="q-title">Sonstige Anmerkungen / Vorschläge</div>
+    </div>
+    <div class="form-card-body">
+      <div class="field-row">
+        <div class="field-label">Kommentar (optional)</div>
+        <textarea id="q8" placeholder="Regelvorschläge, Fragen, Lieblingsgeneration, Wunsch-Soullink-Partner..." oninput="updateProgress()"></textarea>
+      </div>
+    </div>
+  </div>
+
+  <div class="submit-area">
+    <button class="submit-btn" id="submit-btn" onclick="submitForm()">▶ ABSCHICKEN</button>
+  </div>
+
+</div><!-- end survey-wrap -->
+</div><!-- end main-content -->
+
+
+<!-- ═══════════════════════════════════════════════ RESULT ═══ -->
+<div id="result-screen">
+  <div class="result-icon">⚡</div>
+  <div class="result-title">DANKE, TRAINER!</div>
+  <div class="result-sub">Deine Antworten wurden gespeichert. Jetzt heißt es warten bis die Challenge startet – und Pokémon nicht sterben lassen! 😅</div>
+  <div class="result-summary" id="result-summary"></div>
+  <div class="btn-row">
+    <button class="results-btn" onclick="showResults()">📊 ALLE ANTWORTEN ANSEHEN</button>
+    <button class="restart-btn" onclick="restartForm()">↩ NOCHMAL AUSFÜLLEN</button>
+  </div>
+</div>
+
+
+<!-- ═══════════════════════════════════════════════ RESULTS VIEW ═══ -->
+<div id="results-screen">
+  <div class="results-header">
+    <button class="back-btn" onclick="backFromResults()">← ZURÜCK</button>
+    <div class="results-title">📊 ALLE ANTWORTEN</div>
+    <div class="results-count" id="results-count">Lade Daten...</div>
+  </div>
+  <div id="results-container"><div class="loading-msg"><span class="spinner"></span> Lade Antworten von JSONBin...</div></div>
+</div>
+
+
+<script>
+// ══════════════════════════════════════════════════════════════
+//  JSONBin.io Konfiguration
+//  ➤ EINMALIG EINRICHTEN:
+//    1. Geh auf https://jsonbin.io und erstelle einen kostenlosen Account
+//    2. Erstelle einen neuen Bin mit dem Inhalt: {"responses": []}
+//    3. Kopiere die Bin-ID (steht in der URL: /b/XXXXXXXX)
+//    4. Erstelle einen API-Key unter "API Keys" (READ + UPDATE reicht)
+//    5. Trage beides unten ein
+// ══════════════════════════════════════════════════════════════
+const JSONBIN_ID  = '6a06f7a0adc21f119aa39530';   // z.B. '6647abc123def456789'
+const JSONBIN_KEY = '$2a$10$Fo1OhCqmEj5CEMUb1VctdOcLAWTsfCALNIc8J9T7B4KCVi15HdJCC';    // z.B. '$2a$10$...'
+const JSONBIN_URL = `https://api.jsonbin.io/v3/b/${JSONBIN_ID}`;
+
+const TOTAL_Q = 8;
+
+// ─── Progress ─────────────────────────────────────────────────
+function updateProgress() {
+  let filled = 0;
+  if (document.getElementById('q1').value.trim()) filled++;
+  if (document.querySelector('input[name="q2"]:checked')) filled++;
+  if (document.querySelector('input[name="q3"]:checked')) filled++;
+  if (document.querySelectorAll('input[name="q4"]:checked').length) filled++;
+  if (document.querySelector('input[name="q5"]:checked')) filled++;
+  if (document.getElementById('q6').value.trim()) filled++;
+  if (document.querySelectorAll('input[name="q7"]:checked').length) filled++;
+  if (document.getElementById('q8').value.trim()) filled++;
+
+  const pct = Math.round((filled / TOTAL_Q) * 100);
+  document.getElementById('progress-fill').style.width = pct + '%';
+  document.getElementById('progress-label').textContent = filled + ' von ' + TOTAL_Q + ' ausgefüllt';
+}
+
+function toggleOther(id, el) {
+  document.getElementById(id).style.display = el.checked ? 'block' : 'none';
+}
+
+function getChecked(name) {
+  return Array.from(document.querySelectorAll('input[name="' + name + '"]:checked')).map(e => e.value).join(', ') || '—';
+}
+
+// ─── Submit ────────────────────────────────────────────────────
+async function submitForm() {
+  const name = document.getElementById('q1').value.trim();
+  if (!name) { alert('Bitte gib deinen Trainer-Namen ein! 🎮'); return; }
+
+  if (JSONBIN_ID === 'DEINE_BIN_ID_HIER') {
+    alert('⚠️ JSONBin ist noch nicht eingerichtet!\nBitte trage deine Bin-ID und deinen API-Key in die HTML-Datei ein.\n\nAnleitung steht im Skript-Kommentar ganz oben.');
+    return;
+  }
+
+  const spiel = (document.querySelector('input[name="q2"]:checked')?.value === 'Anderes'
+    ? document.getElementById('q2-other-text').value || 'Anderes'
+    : document.querySelector('input[name="q2"]:checked')?.value) || '—';
+
+  const entry = {
+    timestamp: new Date().toISOString(),
+    trainer:   name,
+    spiel:     spiel,
+    erfahrung: document.querySelector('input[name="q3"]:checked')?.value || '—',
+    regeln:    getChecked('q4'),
+    starter:   document.querySelector('input[name="q5"]:checked')?.value || '—',
+    starttermin: document.getElementById('q6').value || '—',
+    spielzeit:   getChecked('q6b'),
+    zusatzregeln: getChecked('q7'),
+    kommentar: document.getElementById('q8').value.trim() || '—',
+  };
+
+  const btn = document.getElementById('submit-btn');
+  btn.disabled = true;
+  btn.innerHTML = '<span class="spinner"></span>SPEICHERN...';
+
+  try {
+    // 1. Aktuelle Daten laden
+    const getRes = await fetch(JSONBIN_URL + '/latest', {
+      headers: { 'X-Master-Key': JSONBIN_KEY }
+    });
+    if (!getRes.ok) throw new Error('Laden fehlgeschlagen: ' + getRes.status);
+    const current = await getRes.json();
+    const responses = current.record?.responses || [];
+    responses.push(entry);
+
+    // 2. Zurückschreiben
+    const putRes = await fetch(JSONBIN_URL, {
+      method: 'PUT',
+      headers: {
+        'Content-Type': 'application/json',
+        'X-Master-Key': JSONBIN_KEY
+      },
+      body: JSON.stringify({ responses })
+    });
+    if (!putRes.ok) throw new Error('Speichern fehlgeschlagen: ' + putRes.status);
+
+    // 3. Erfolg anzeigen
+    const summaryFields = [
+      ['Trainer', entry.trainer],
+      ['Spiel', entry.spiel],
+      ['Erfahrung', entry.erfahrung],
+      ['Soullink-Regeln', entry.regeln],
+      ['Starter', entry.starter],
+      ['Starttermin', entry.starttermin],
+      ['Spielzeit', entry.spielzeit],
+      ['Zusatzregeln', entry.zusatzregeln],
+    ];
+    if (entry.kommentar !== '—') summaryFields.push(['Anmerkung', entry.kommentar]);
+
+    document.getElementById('result-summary').innerHTML =
+      summaryFields.map(([k,v]) =>
+        `<div class="summary-row"><span class="summary-key">${k}</span><span class="summary-val">${v}</span></div>`
+      ).join('');
+
+    document.getElementById('main-content').style.display = 'none';
+    document.getElementById('result-screen').style.display = 'block';
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+
+  } catch (err) {
+    console.error(err);
+    alert('❌ Fehler beim Speichern:\n' + err.message + '\n\nBitte prüfe deine Bin-ID und deinen API-Key.');
+    btn.disabled = false;
+    btn.innerHTML = '▶ ABSCHICKEN';
+  }
+}
+
+// ─── Show all results ──────────────────────────────────────────
+async function showResults() {
+  document.getElementById('result-screen').style.display = 'none';
+  document.getElementById('results-screen').style.display = 'block';
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+  await loadResults();
+}
+
+async function loadResults() {
+  const container = document.getElementById('results-container');
+  container.innerHTML = '<div class="loading-msg"><span class="spinner"></span> Lade Antworten von JSONBin...</div>';
+
+  if (JSONBIN_ID === 'DEINE_BIN_ID_HIER') {
+    container.innerHTML = `<div class="setup-banner">
+      <strong>⚙️ JSONBin noch nicht eingerichtet</strong>
+      So geht's:
+      <ol style="margin-top:8px;padding-left:18px;line-height:2">
+        <li>Account erstellen auf <a href="https://jsonbin.io" target="_blank" style="color:#aaddff">jsonbin.io</a></li>
+        <li>Neuen Bin anlegen mit Inhalt: <code>{"responses": []}</code></li>
+        <li>Bin-ID kopieren (aus der URL)</li>
+        <li>API-Key erstellen (READ + UPDATE)</li>
+        <li>Beide Werte im <code>&lt;script&gt;</code>-Block der HTML-Datei eintragen</li>
+      </ol>
+    </div>`;
+    return;
+  }
+
+  try {
+    const res = await fetch(JSONBIN_URL + '/latest', {
+      headers: { 'X-Master-Key': JSONBIN_KEY }
+    });
+    if (!res.ok) throw new Error('HTTP ' + res.status);
+    const data = await res.json();
+    const responses = data.record?.responses || [];
+
+    document.getElementById('results-count').innerHTML =
+      `<span>${responses.length}</span> Antwort${responses.length !== 1 ? 'en' : ''} eingegangen`;
+
+    if (responses.length === 0) {
+      container.innerHTML = '<div class="loading-msg">Noch keine Antworten vorhanden. Seid die Ersten! 🚀</div>';
+      return;
+    }
+
+    const labels = {
+      spiel: 'Spiel', erfahrung: 'Erfahrung', regeln: 'Regeln',
+      starter: 'Starter', starttermin: 'Start ab', spielzeit: 'Spielzeit',
+      zusatzregeln: 'Zusatzregeln', kommentar: 'Kommentar'
+    };
+
+    container.innerHTML = [...responses].reverse().map((r, i) => {
+      const ts = r.timestamp ? new Date(r.timestamp).toLocaleString('de-DE', {
+        day:'2-digit', month:'2-digit', year:'numeric', hour:'2-digit', minute:'2-digit'
+      }) : '';
+      const fields = Object.entries(labels)
+        .filter(([k]) => r[k] && r[k] !== '—')
+        .map(([k, lbl]) => {
+          const wide = k === 'regeln' || k === 'zusatzregeln' || k === 'kommentar' ? ' wide' : '';
+          return `<div class="entry-field${wide}">
+            <div class="entry-field-key">${lbl}</div>
+            <div class="entry-field-val">${r[k]}</div>
+          </div>`;
+        }).join('');
+      return `<div class="entry-card">
+        <div class="entry-header">
+          <div class="entry-trainer">⚡ ${r.trainer || 'Unbekannt'}</div>
+          <div class="entry-time">${ts}</div>
+        </div>
+        <div class="entry-body">${fields}</div>
+      </div>`;
+    }).join('');
+
+  } catch (err) {
+    container.innerHTML = `<div class="error-msg">
+      ❌ Fehler beim Laden: ${err.message}<br>
+      Bitte prüfe deine Bin-ID und deinen API-Key.
+    </div>`;
+  }
+}
+
+// ─── Navigation ────────────────────────────────────────────────
+function restartForm() {
+  document.getElementById('result-screen').style.display = 'none';
+  document.getElementById('main-content').style.display = 'block';
+}
+
+function backFromResults() {
+  document.getElementById('results-screen').style.display = 'none';
+  document.getElementById('result-screen').style.display = 'block';
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+// Direkt zur Ergebnis-Ansicht springen (z.B. per Link ?view=results)
+if (new URLSearchParams(location.search).get('view') === 'results') {
+  document.getElementById('main-content').style.display = 'none';
+  document.getElementById('results-screen').style.display = 'block';
+  loadResults();
+}
+</script>
+</body>
+</html>
