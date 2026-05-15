@@ -557,6 +557,42 @@
     width: 0%;
   }
   .progress-label { font-size: 11px; color: var(--muted); text-align: right; margin-top: 4px; }
+  .info-section{
+  margin-bottom:32px;
+}
+
+.info-card{
+  background:#111128;
+  border:1px solid #1e1e42;
+  border-radius:16px;
+  padding:22px;
+  margin-bottom:18px;
+}
+
+.info-card h2{
+  color:#FFD700;
+  margin-top:0;
+  margin-bottom:14px;
+}
+
+.info-card p{
+  color:#d8dcff;
+  line-height:1.7;
+  margin-bottom:12px;
+}
+
+.rule-box{
+  background:#0b0b18;
+  border:1px solid #2a2a55;
+  border-radius:12px;
+  padding:16px;
+  margin-bottom:14px;
+}
+
+.rule-box h3{
+  margin-top:0;
+  color:#3B82F6;
+}
 </style>
 </head>
 <body>
@@ -600,6 +636,126 @@
       <div class="rule-desc">Die Pokémon-Liga besiegen, ohne dass alle verlinkten Paare gleichzeitig tot sind (Game Over).</div>
     </div>
   </div>
+</div>
+<!-- ═══════════════════════════════════════ -->
+<!-- SOULLINK ERKLÄRUNG -->
+<!-- ═══════════════════════════════════════ -->
+
+<div class="info-section">
+
+  <div class="info-card">
+
+    <h2>⚡ Was ist eine Pokémon Soullink Challenge?</h2>
+
+    <p>
+      Eine <strong>Soullink Challenge</strong> ist eine besondere Pokémon-Challenge,
+      die man gemeinsam mit Freunden spielt.
+      Dabei spielen mehrere Personen gleichzeitig ein Pokémon-Spiel
+      und ihre Pokémon werden miteinander „verbunden“.
+    </p>
+
+    <p>
+      Das Ziel ist nicht nur das Spiel durchzuspielen,
+      sondern gemeinsam zu überleben, Strategien zu planen
+      und schwierige Kämpfe zu meistern.
+    </p>
+
+  </div>
+
+  <div class="info-card">
+
+    <h2>🎮 Wie funktioniert Pokémon überhaupt?</h2>
+
+    <p>
+      In Pokémon reist man durch verschiedene Städte und Gebiete,
+      fängt Pokémon, trainiert sie
+      und kämpft gegen andere Trainer.
+    </p>
+
+    <p>
+      Jedes Pokémon hat unterschiedliche Typen und Fähigkeiten.
+      Manche sind stark gegen bestimmte Gegner,
+      andere eher schwach.
+    </p>
+
+    <p>
+      Normalerweise kann man besiegte Pokémon einfach wieder heilen.
+      In einer Soullink Challenge gelten aber besondere Regeln.
+    </p>
+
+  </div>
+
+  <div class="info-card">
+
+    <h2>💀 Die wichtigsten Soullink-Regeln</h2>
+
+    <div class="rule-box">
+      <h3>1️⃣ Permadeath</h3>
+      <p>
+        Wenn ein Pokémon besiegt wird,
+        gilt es als „tot“ und darf nie wieder benutzt werden.
+      </p>
+    </div>
+
+    <div class="rule-box">
+      <h3>2️⃣ Erste Begegnung pro Route</h3>
+      <p>
+        In jedem neuen Gebiet darf nur das erste Pokémon gefangen werden,
+        das man dort trifft.
+      </p>
+    </div>
+
+    <div class="rule-box">
+      <h3>3️⃣ Pokémon werden verlinkt</h3>
+      <p>
+        Die gefangenen Pokémon der Spieler werden miteinander verbunden.
+        Beispiel:
+      </p>
+
+      <p>
+        Spieler A fängt Pikachu<br>
+        Spieler B fängt Evoli
+      </p>
+
+      <p>
+        Diese beiden Pokémon sind jetzt ein „Soul Link“.
+      </p>
+    </div>
+
+    <div class="rule-box">
+      <h3>4️⃣ Stirbt eines, sterben beide</h3>
+      <p>
+        Wenn ein verbundenes Pokémon besiegt wird,
+        muss auch das verlinkte Pokémon des Partners abgegeben werden –
+        selbst wenn es noch lebt.
+      </p>
+    </div>
+
+  </div>
+
+  <div class="info-card">
+
+    <h2>🤝 Warum macht Soullink so viel Spaß?</h2>
+
+    <p>
+      Eine Soullink Challenge ist oft chaotisch,
+      lustig und sehr spannend.
+      Jeder Fehler kann das ganze Team beeinflussen.
+    </p>
+
+    <p>
+      Man plant gemeinsam Strategien,
+      leidet zusammen bei Niederlagen
+      und feiert große Siege als Team.
+    </p>
+
+    <p>
+      Dadurch fühlt sich jedes Pokémon wichtig an
+      und jede Entscheidung zählt.
+    </p>
+
+  </div>
+
 </div>
 
 <div class="progress-wrap">
@@ -1127,3 +1283,4 @@ if (new URLSearchParams(location.search).get('view') === 'results') {
 </script>
 </body>
 </html>
+
